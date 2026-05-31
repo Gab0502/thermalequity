@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThermalEquity — Desigualdade Térmica Urbana via Satélite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🌡️ ThermalEquity</h1>
+            <p class="subtitle">Monitoramento de Desigualdade Térmica Urbana via Dados Satelitais</p>
+            <div class="ods-badges">
+                <span class="badge ods10">ODS 10 — Redução de Desigualdades</span>
+                <span class="badge ods11">ODS 11 — Cidades Sustentáveis</span>
+                <span class="badge ods13">ODS 13 — Ação Climática</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="problem-section">
+            <h2>O Problema</h2>
+            <p>
+                Imagens termais do satélite <strong>Landsat (NASA)</strong> revelam que favelas em São Paulo
+                são até <strong>15°C mais quentes</strong> que bairros ricos vizinhos. Heliópolis chega a
+                <strong>44°C</strong> de temperatura de superfície, enquanto Alphaville registra <strong>28°C</strong>.
+                Essa desigualdade térmica é invisível para gestores públicos — e não entra em nenhuma política habitacional.
+            </p>
+        </section>
+
+        <section class="stats-section">
+            <div class="stat-card critico">
+                <div class="stat-number">15°C</div>
+                <div class="stat-label">diferença máxima entre favelas e bairros ricos</div>
+            </div>
+            <div class="stat-card alto">
+                <div class="stat-number">44°C</div>
+                <div class="stat-label">temperatura de superfície em Heliópolis (verão)</div>
+            </div>
+            <div class="stat-card baixo">
+                <div class="stat-number">28°C</div>
+                <div class="stat-label">temperatura de superfície em Alphaville (verão)</div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <h2>Índice de Vulnerabilidade Térmica por Bairro</h2>
+            <p class="source">Dados baseados em imagens Landsat/NASA · Pesquisa CEFAVELA/UFABC 2025 · IBGE</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bairro</th>
+                        <th>Zona</th>
+                        <th>Temp. Superfície</th>
+                        <th>Cobertura Vegetal</th>
+                        <th>Renda Média (R$)</th>
+                        <th>Risco Térmico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in bairros %}
+                    <tr class="risco-{{ b.risco }}">
+                        <td><strong>{{ b.nome }}</strong></td>
+                        <td>{{ b.zona }}</td>
+                        <td>{{ b.temp_media }}°C</td>
+                        <td>{{ b.veg_pct }}%</td>
+                        <td>R$ {{ "{:,.0f}".format(b.renda_media) }}</td>
+                        <td><span class="badge-risco {{ b.risco }}">{{ b.risco.upper() }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="solution-section">
+            <h2>Como o ThermalEquity funciona</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">🛰️</div>
+                    <div class="step-text"><strong>1. Coleta</strong><br>Imagens termais do satélite Landsat (NASA) via API pública</div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">🔄</div>
+                    <div class="step-text"><strong>2. Pipeline</strong><br>Apache Airflow processa e armazena dados no Oracle</div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">🤖</div>
+                    <div class="step-text"><strong>3. IA</strong><br>CNN classifica imagens + ML prediz índice de risco por bairro</div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">📊</div>
+                    <div class="step-text"><strong>4. Dashboard</strong><br>Gestores públicos visualizam e priorizam intervenções</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="api-section">
+            <h2>API Endpoints</h2>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <code>/api/bairros</code>
+                    <span>Lista todos os bairros com dados de temperatura</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <code>/api/bairros/{nome}</code>
+                    <span>Detalhes de um bairro específico</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <code>/health</code>
+                    <span>Status da aplicação</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>ThermalEquity · FIAP Global Solution 2026 · Engenharia de Software 4º Ano</p>
+            <p>Dados satelitais: NASA Landsat · Fonte: CEFAVELA/UFABC · IBGE Censo 2022</p>
+        </footer>
+    </main>
+</body>
+</html>
